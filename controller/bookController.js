@@ -95,34 +95,28 @@ export const addBook = (req, res) => {
 export const editBook = async (req, res) => {
   try {
     const id = req.params.id;
-K
-    const { name, description, publishDate, price } = req.body; // Get updated book details from request body
-    //   console.log(publishDate,"------------------------");
-    let parsedPublishDate; // Declare parsedPublishDate variable
-    // Check if publishDate is not a string (e.g., already a Date object)
+    const { name, description, publishDate, price } = req.body; 
+    let parsedPublishDate; 
+
     if (typeof publishDate !== 'string') {
-      parsedPublishDate = publishDate; // Use the provided Date object
+      parsedPublishDate = publishDate; 
     } else {
-      parsedPublishDate = new Date(publishDate); // Convert publishDate string to Date object
+      parsedPublishDate = new Date(publishDate); 
     }
-    // console.log(parsedPublishDate,"------------------");
-    // Update book details in the database using findByIdAndUpdate
+
     const updatedBook = await Book.findByIdAndUpdate(
-      id, // Filter to find book by id
-      { name, description, date: parsedPublishDate, price }, // Updated book details with parsed publishDate
-      { new: true } // Return the updated document
+      id, 
+      { name, description, date: parsedPublishDate, price }, 
+      { new: true } 
     );
 
     if (!updatedBook) {
-      // If book with the provided ID is not found, send a 404 response
       return res.status(404).json({ error: "Book not found" });
     }
 
-    // If the book is updated successfully, send a success response with the updated book
     res.status(200).json({ message: "Book edited successfully", updatedBook });
   } catch (error) {
     console.log(error);
-    // If an error occurs, send an error response
     res.status(500).json({ error: "Internal server error" });
   }
 };
